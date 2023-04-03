@@ -21,11 +21,10 @@ endif()
 # Add third party library required by crypto_wrappers and tls_wrappers
 if(SGX)
     list(APPEND INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/external/sgx-ssl/intel-sgx-ssl/src/intel-sgx-ssl/Linux/package/include)
+    list(APPEND INCLUDE_DIRS ${LIBCBOR_INC_PATH})
 endif()
 add_subdirectory(crypto_wrappers)
 add_subdirectory(tls_wrappers)
-
-list(APPEND INCLUDE_DIRS ${LIBCBOR_INC_PATH})
 
 include_directories(${INCLUDE_DIRS})
 
@@ -93,12 +92,11 @@ endif()
 
 # Generate library
 if(SGX)
-    add_trusted_library(${RTLS_LIB} SRCS ${SOURCES} TRUSTED_LIBS ${DEPEND_TRUSTED_LIBS})
+    add_trusted_library(${RTLS_LIB} SRCS ${SOURCES})
     add_dependencies(${RTLS_LIB} ${DEPEND_TRUSTED_LIBS})
 else()
     add_library(${RTLS_LIB} SHARED ${SOURCES})
-    add_dependencies(${RTLS_LIB} libcbor)
-    target_link_libraries(${RTLS_LIB} ${RATS_TLS_LDFLAGS} ${LIBCBOR_LIB_FILES})
+    target_link_libraries(${RTLS_LIB} ${RATS_TLS_LDFLAGS} cbor)
     set_target_properties(${RTLS_LIB} PROPERTIES VERSION ${VERSION} SOVERSION ${VERSION_MAJOR})
 endif()
 

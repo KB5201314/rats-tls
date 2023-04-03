@@ -95,9 +95,10 @@ include(CompilerOptions)
 if(SGX)
     include(SGXCommon)
     include(SGXSSL)
+    include(LibCBOR)
+else()
+    find_package(LibCBOR REQUIRED)
 endif()
-
-include(LibCBOR)
 
 # Subdirectory
 add_subdirectory(src)
